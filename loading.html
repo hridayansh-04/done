@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open When Letters</title>
+    
+    <!-- Adding Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Loading screen styles */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFC0CB;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Loading screen text */
+        .loading-text {
+            font-size: 60px;
+            font-weight: bold;
+            color: #FF5733;
+        }
+
+        /* Enter button */
+        .enter-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #FF5733;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .enter-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main content after loading screen */
+        #mainContent {
+            display: none;
+        }
+
+        /* Main content container */
+        .jar-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        /* Jar buttons */
+        .jar {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            font-size: 18px;
+            opacity: 0.8;
+            animation: jarFadeIn 2s ease-in-out;
+        }
+
+        .jar:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes jarFadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1); }
+        }
+
+        /* Jar colors */
+        .quit { background-color: #FF5733; }
+        .happy { background-color: #FFB733; }
+        .cheer-up { background-color: #75FF33; }
+        .too-much { background-color: #3375FF; }
+        .argument { background-color: #8E33FF; }
+        .not-well { background-color: #FF33A1; }
+        .not-there { background-color: #FF5733; }
+        .exams { background-color: #33FFBD; }
+        .beautiful { background-color: #FF33F6; }
+        .crying { background-color: #33A1FF; }
+
+        /* Popup container */
+        .popup-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: popupFadeIn 1s ease-out;
+        }
+
+        @keyframes popupFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+            animation: popupContentSlideIn 0.5s ease-in-out;
+        }
+
+        @keyframes popupContentSlideIn {
+            0% { transform: translateY(-30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .close-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading screen -->
+    <div id="loadingScreen">
+        <div class="loading-text">Kya haal hai madam ke!!!</div>
+
+        <!-- Enter Button -->
+        <button class="enter-button" onclick="enterPage()">Enter</button>
+    </div>
+
+    <!-- Main content hidden initially -->
+    <div id="mainContent" style="display: none;">
+        <h1>Pick a mood you feel right now</h1>
+        
+        <!-- Jar buttons -->
+        <div class="jar-container">
+            <div class="jar quit" onclick="showLetter('quit')">When You Wanna Quit 🛑</div>
+            <div class="jar happy" onclick="showLetter('happy')">When You Feel Happy 🎉</div>
+            <div class="jar cheer-up" onclick="showLetter('cheerUp')">When You Wanna Cheer Up 💪</div>
+            <div class="jar too-much" onclick="showLetter('tooMuch')">When It Gets Too Much 💪</div>
+            <div class="jar argument" onclick="showLetter('argument')">When We Have an Argument 😰</div>
+            <div class="jar not-well" onclick="showLetter('notWell')">When You're Not Well 🤍</div>
+            <div class="jar not-there" onclick="showLetter('notThere')">When I'm Not There ❤</div>
+            <div class="jar exams" onclick="showLetter('exams')">Before Your Exams 😡</div>
+            <div class="jar beautiful" onclick="showLetter('beautiful')">When You Feel Beautiful 🎉</div>
+            <div class="jar crying" onclick="showLetter('crying')">When You Feel Like Crying 😭</div>
+        </div>
+
+        <!-- Popup container -->
+        <div id="popupBg" class="popup-bg" onclick="closePopup()">
+            <div class="popup-content" onclick="event.stopPropagation()">
+                <div id="letterContent" style="color: black;"></div>
+                <button class="close-btn" onclick="closePopup()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function enterPage() {
+            // Hide the loading screen and show the main content
+            document.getElementById("loadingScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+        }
+
+        // Predefined letters for each mood
+        const letters = {
+            quit: "Hey cutoo, Badiii si jhappiiiii for youuuu🥰🫂 Just wanted you to know that I'm super proud of you🥹 Proud of you for working so hard, Proud of you for going through so many ups and downs and still keeping that smile intact, Proud of you for not giving up no matter what happens, But most of all, I'm proud of you for being the beautiful person you are✨ I love youu more than ukkk🫶🏼 Just keep goinggg, TU KARLEGI YAAR<3",
+            happy: "Dekh dekh dekh kinni sonhi lagri haiii, aise hi haste raha kar meri cutuuu🥰",
+            cheerUp: "We'll ik it can be hard at times but there's smth I wanted to give you. Haan Obv it is virtual only😂. I wanted to give you a gold medal for being the hardworking person you are 🙂‍↕️, a gold medal for being the best sister in the world ❤️, a gold for being the best daughter 🫶🏼, a gold medal for being the amazing person who cares for everyone around 🥰, a gold medal for being the best friend one could have🫶🏼 and most of all a gold medal for being my gadhedooo 😂😘",
+            tooMuch: "Keep your head up princess 'fore your crown falls, Know these voices in your head will be your downfall I know it gets so hard but you don't got far to go, Yeah, keep your head up princess, it's a long road, And the path leads right to where they won't go I know it hurts right now but I know you'll make it home, So keep your head up Yeah, keep your head up.",
+            argument: "Well ig I fucked up, hu me thoda chutiya sa but hu to aapka hi bestfriend naaaa😏🥰, idk abhi shayad we're not talking theek se but just knoww that I loveeee youuuuu jaise bhi hoooo🫶🏼 tu hai meri gadhedooo aur rahegiiiii😂😂 mere saamne nahi but chal ye letter dekh ke hi badiiii si smile karleeee....wait....clicks......Kinniii sonhiii laagriii haiii meri kudiiii🧿😂",
+            notWell: "Heyy I'm sending you love, You can hold on to it evry time you feel weak, Or if it gets too cold you can wrap yourself with it, Let it keep you safe and warm, When you're listening to a song or reading a book, Let it rest inside your heart, Let it guide you and show you light when you're lost and things are getting dark, When you're feeling empty, Let it fill you up, If you feel burnt out, Let it tap on your shoulder and remind you how strong you are, Let it get tangled up in silly conversations, When you're lonely and hurting, Let it wipe your tears away, Let it kiss you on your head when you're not feeling at your best, In your silence, Let it make some noise, I'm sending you love, Use it when ever you need, Cause I'll be here whenever you sink deep.",
+            notThere: "Hey, Wassupp I wrote this up so you could read it again whenever you feel down, I know life can suck sometimes, Lot of stuff to worry about, Lot of battles you fight in your head that no one knows, Just know one thing, Even if the whole world was against, You've got people you can lean on, People who won't leave you in your darkest times, People who think you look the cutest when you cry😂, People who no matter how many times you wanna feel like giving up will get you up, And they are proud of you, You're doing your best, And we are togather in this, Isiliye cheer up bishhh🥳 You've got all of this...sherni hai tu sherniiii.....rawwrrrrr😂🥰🦁",
+            exams: "Ik it is stressful...managingseverything but you're doing greatttttt🥳 Tu kar legiiii meri shreniiiiii🦁😘 You've got thisssss🤜🏼",
+            beautiful: "I think you're really pretty, If pretty were the sky, You'd be a beautiful sunset from a cliff, If pretty were a piece of art, Then I'd put u beside a masterpiece and wouldn't be able to tell you apart, If pretty were a festival, You'd be the prettiest sky full of lanterns on a diwali night, But most of all I think you're really pretty, Cause if it were easy to see, It'd be you being the best you with that beautiful smile of yours.",
+            crying: "Heyy,/nIs this my cutuuu gadhedo?? Kyaa haal hai madam keeeee??? It's alrightttt, you can cryyy....let it all out cause no one can keep it all in forever and given how brave and strong you are, you deserve it🥰. And ik after sometime you're gonna be back so it's okayyy to be down for sometime. I'm proud of youuuuuu my girl and you deserve everything and that means a little space as well❤️/nI love youu ❤️❤️"
+        };
+
+        // Show the letter in the popup with typing effect
+        function showLetter(mood) {
+             const letterContent = document.getElementById("letterContent");
+    const letter = letters[mood] || "No letter saved for this mood yet.";
+
+    // Directly set the content without typing effect
+    letterContent.innerHTML = letter;
+
+            document.getElementById("popupBg").style.display = "flex";
+        }
+
+        // Close the popup
+        function closePopup() { document.getElementById("popupBg").style.display = "none"; }
+    </script>
+</body>
+</html>
